@@ -26,9 +26,9 @@ cosmos.dat <- read.csv(file = "data/COSMOS/cosmos.dat.csv")
 # Functions ####
 
 
-source(file = "~/Documents/GitHub/phd_tools/fun_distribution_plots.R")
+source(file = "functions/fun_distribution_plots.R")
 
-source(file = "~/Documents/GitHub/phd_tools/fun_glm_diagnostic_plots.R")
+source(file = "functions/fun_glm_diagnostic_plots.R")
 
 
 

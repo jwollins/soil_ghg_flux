@@ -13,6 +13,7 @@ if (interactive()) {
     library(lmerTest)
     library(emmeans)
     library(rstudioapi)
+    library(ggpubr)
   })
 
   # Print a welcome message

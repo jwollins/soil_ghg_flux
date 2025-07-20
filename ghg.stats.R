@@ -37,8 +37,8 @@ source(file = "functions/fun_glm_diagnostic_plots.R")
 # Intro stats ####
 
 # filter to Treatment 
-ca.dat <-  filter(mean.dat, Treatment == "Conservation")
-con.dat <- filter(mean.dat, Treatment == "Conventional")
+ca.dat <-  dplyr::filter(mean.dat, Treatment == "Conservation")
+con.dat <- dplyr::filter(mean.dat, Treatment == "Conventional")
 
 
 
@@ -196,8 +196,8 @@ ggsave(filename = "plots/distributions/dist_co2_g_m3_h.png", width = 10, height 
 shapiro.test(x = dat$co2.g.m3.h)
 
 
-c <- lmer(co2.g.m3.h ~ factor(Treatment) + 
-            N.kg.ha + soil.temp + soil.moist + 
+c <- lmer(log(co2.g.m3.h) ~ factor(Treatment) + 
+            # N.kg.ha + soil.temp + soil.moist + 
             (1 | batch.date) + (1 | block), data = dat)
 summary(c)
 anova(c)
@@ -210,10 +210,17 @@ ggsave(filename = "plots/model_diagnostics/model_diag_co2_g_m3_h.png",
        width = 10, height = 3.5)
 
 
-glm <- glm(co2.g.m3.h ~ factor(Treatment) + ,
-           data = dat)
 
-summary(glm)
+
+# CO2 ~ other variables
+
+c <- lmer(log(co2.g.m3.h) ~ N.kg.ha + soil.temp + soil.moist +
+            (1 | batch.date) + (1 | block), data = dat)
+
+summary(c)
+
+
+
 
 
 
@@ -222,16 +229,17 @@ summary(glm)
 
 # ~ N2O ####
 
+
+
+
 distribution_plots(data = dat, variable = dat$n2o.mg.m3.h, colour = dat$n2o.mg.m3.h)
 
 ggsave(filename = "plots/distributions/dist_n2o_mg_m3_h.png", width = 10, height = 2.25)
 
-
-n <- lmer(n2o.mg.m3.h ~ factor(Treatment) * 
-            N.kg.ha + soil.temp + soil.moist + 
+n <- lmer(log(n2o.mg.m3.h) ~ factor(Treatment) +
             (1 | batch.date) + (1 | block), data = dat)
+
 summary(n)
-anova(n)
 
 diagnostic_plots_glm(model = n)
 
@@ -239,10 +247,23 @@ ggsave(filename = "plots/model_diagnostics/model_diag_n2o_mg_m3_h.png",
        width = 10, height = 3.5)
 
 
-glm <- glm(n2o.mg.m3.h ~ factor(Treatment),
-           data = dat)
 
-summary(glm)
+
+
+
+
+# N2O ~ other variables
+
+n <- lmer(log(n2o.mg.m3.h) ~ N.kg.ha + soil.temp + soil.moist +
+            (1 | batch.date) + (1 | block), data = dat)
+
+summary(n)
+
+
+
+
+
+
 
 
 
@@ -254,7 +275,8 @@ distribution_plots(data = dat, variable = dat$ch4.mg.m3.h, colour = dat$ch4.mg.m
 ggsave(filename = "plots/distributions/dist_ch4_mg_m3_h.png", width = 10, height = 2.25)
 
 
-ch <- lmer(ch4.mg.m3.h ~ factor(Treatment) + N.kg.ha + soil.temp + soil.moist + (1 | batch.date) + (1 | block), data = dat)
+ch <- lmer(ch4.mg.m3.h ~ factor(Treatment)  +
+             (1 | batch.date) + (1 | block), data = dat)
 summary(ch)
 anova(ch)
 
@@ -264,10 +286,18 @@ ggsave(filename = "plots/model_diagnostics/model_diag_ch4_mg_m3_h.png",
        width = 10, height = 3.5)
 
 
-# glm <- glm(ch4.mg.m3.h ~ factor(Treatment),
-#            data = dat)
-# 
-# summary(glm)
+
+# CH4 ~ other variables
+
+ch <- lmer(log(ch4.mg.m3.h) ~ N.kg.ha + soil.temp + soil.moist +
+            (1 | batch.date) + (1 | block), data = dat)
+
+summary(ch)
+
+
+
+
+
 
 
 
@@ -281,10 +311,9 @@ ggsave(filename = "plots/distributions/dist_gwp.png", width = 10, height = 2.25)
 
 
 gwp <- lmer(dat$gwp.total ~ factor(Treatment) + 
-              N.kg.ha + soil.temp + soil.moist + 
+              # N.kg.ha + soil.temp + soil.moist + 
               (1 | batch.date) + (1 | block), data = dat)
 summary(gwp)
-
 
 diagnostic_plots_glm(model = gwp)
 
@@ -293,6 +322,10 @@ ggsave(filename = "plots/model_diagnostics/model_diag_gwp.png",
 
 
 
+
+gwp <- lmer(dat$gwp.total ~ N.kg.ha + soil.temp + soil.moist + 
+              (1 | batch.date) + (1 | block), data = dat)
+summary(gwp)
 
 
 
@@ -307,7 +340,7 @@ ggsave(filename = "plots/distributions/dist_gwp_yield_scaled.png", width = 10, h
 
 
 ys <- lmer(dat$ys.gwp.total ~ factor(Treatment) + 
-            N.kg.ha + soil.temp + soil.moist + 
+            # N.kg.ha + soil.temp + soil.moist + 
             (1 | batch.date) + (1 | block), data = dat)
 summary(ys)
 

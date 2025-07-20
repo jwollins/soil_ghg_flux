@@ -14,6 +14,7 @@ if (interactive()) {
     library(emmeans)
     library(rstudioapi)
     library(ggpubr)
+    library(lme4)
   })
 
   # Print a welcome message
